@@ -1,0 +1,35 @@
+import { prisma } from "@/prisma";
+import Link from "next/link";
+
+const getTodo = async (id: string) => {
+  const todo = await prisma.todo.findUnique({
+    where: { id: parseInt(id) },
+  });
+  return todo;
+};
+
+export default async function Todo({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const todo = await getTodo(id);
+
+  if (!todo) {
+    return (
+      <>
+        <h1>Todo Detail</h1>
+        <p>id: {id}</p>
+        <p>Todo not found</p>
+        <Link href="/">Back</Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h1>Todo Detail</h1>
+      <p>id: {id}</p>
+      <p>title: {todo.title}</p>
+      <p>description: {todo.description}</p>
+      <Link href="/">Back</Link>
+    </>
+  );
+}
